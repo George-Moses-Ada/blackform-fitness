@@ -1,0 +1,49 @@
+import { useState } from 'react'
+import ProgramCard from '../components/ProgramCard'
+import FilterBar from '../components/FilterBar'
+import { programs } from '../data/programs'
+
+export default function Programs() {
+  const [filteredPrograms, setFilteredPrograms] = useState(programs)
+
+  const handleFilter = (filters) => {
+    let filtered = programs
+
+    if (filters.goal !== 'All') {
+      filtered = filtered.filter(p => p.goal === filters.goal)
+    }
+    if (filters.difficulty !== 'All') {
+      filtered = filtered.filter(p => p.difficulty === filters.difficulty)
+    }
+    if (filters.duration !== 'All') {
+      filtered = filtered.filter(p => p.duration === filters.duration)
+    }
+
+    setFilteredPrograms(filtered)
+  }
+
+  return (
+    <div className="pt-24 pb-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 className="text-4xl font-bold text-white mb-4">Programs</h1>
+        <p className="text-gray-400 mb-8 max-w-2xl">
+          Choose from our expert-designed fitness programs tailored to your goals and experience level.
+        </p>
+
+        <FilterBar onFilter={handleFilter} />
+
+        {filteredPrograms.length > 0 ? (
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {filteredPrograms.map((program) => (
+              <ProgramCard key={program.id} program={program} />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-12">
+            <p className="text-gray-400 text-lg">No programs match your filters. Try adjusting your criteria.</p>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
