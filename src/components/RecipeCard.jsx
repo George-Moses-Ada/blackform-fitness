@@ -4,12 +4,12 @@ export default function RecipeCard({ recipe }) {
       <div className="h-48 overflow-hidden">
         <img
           src={recipe.image}
-          alt={recipe.name}
+          alt={recipe.title}
           className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
         />
       </div>
       <div className="p-5">
-        <h3 className="text-white font-semibold text-lg mb-3">{recipe.name}</h3>
+        <h3 className="text-white font-semibold text-lg mb-3">{recipe.title}</h3>
         <div className="flex items-center space-x-4 text-sm text-gray-400 mb-4">
           <span>{recipe.calories} cal</span>
           <span>•</span>

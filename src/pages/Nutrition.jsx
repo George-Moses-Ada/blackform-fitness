@@ -1,7 +1,26 @@
+import { useState, useEffect } from 'react'
 import RecipeCard from '../components/RecipeCard'
-import { recipes } from '../data/recipes'
+import { nutritionAPI } from '../services/api'
 
 export default function Nutrition() {
+  const [recipes, setRecipes] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetchRecipes()
+  }, [])
+
+  const fetchRecipes = async () => {
+    try {
+      const data = await nutritionAPI.getAll()
+      setRecipes(data)
+    } catch (error) {
+      console.error('Error fetching recipes:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <div className="pt-24 pb-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -35,11 +54,17 @@ export default function Nutrition() {
         </div>
 
         <h2 className="text-2xl font-bold text-white mb-6">Featured Recipes</h2>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-          {recipes.map((recipe) => (
-            <RecipeCard key={recipe.id} recipe={recipe} />
-          ))}
-        </div>
+        {loading ? (
+          <div className="text-center py-12">
+            <p className="text-gray-400 text-lg">Loading recipes...</p>
+          </div>
+        ) : (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            {recipes.map((recipe) => (
+              <RecipeCard key={recipe._id} recipe={recipe} />
+            ))}
+          </div>
+        )}
 
         <div className="bg-gray-900 rounded-2xl p-8 border border-gray-800">
           <h2 className="text-2xl font-bold text-white mb-4">Nutrition Tips</h2>

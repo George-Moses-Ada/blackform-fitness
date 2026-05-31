@@ -1,16 +1,34 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import ProgramCard from '../components/ProgramCard'
 import FilterBar from '../components/FilterBar'
-import { programs } from '../data/programs'
+import { programsAPI } from '../services/api'
 
 export default function Programs() {
-  const [filteredPrograms, setFilteredPrograms] = useState(programs)
+  const [programs, setPrograms] = useState([])
+  const [filteredPrograms, setFilteredPrograms] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetchPrograms()
+  }, [])
+
+  const fetchPrograms = async () => {
+    try {
+      const data = await programsAPI.getAll()
+      setPrograms(data)
+      setFilteredPrograms(data)
+    } catch (error) {
+      console.error('Error fetching programs:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const handleFilter = (filters) => {
     let filtered = programs
 
     if (filters.goal !== 'All') {
-      filtered = filtered.filter(p => p.goal === filters.goal)
+      filtered = filtered.filter(p => p.category === filters.goal)
     }
     if (filters.difficulty !== 'All') {
       filtered = filtered.filter(p => p.difficulty === filters.difficulty)
@@ -32,10 +50,14 @@ export default function Programs() {
 
         <FilterBar onFilter={handleFilter} />
 
-        {filteredPrograms.length > 0 ? (
+        {loading ? (
+          <div className="text-center py-12">
+            <p className="text-gray-400 text-lg">Loading programs...</p>
+          </div>
+        ) : filteredPrograms.length > 0 ? (
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {filteredPrograms.map((program) => (
-              <ProgramCard key={program.id} program={program} />
+              <ProgramCard key={program._id} program={program} />
             ))}
           </div>
         ) : (

@@ -1,11 +1,25 @@
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import ProgramCard from '../components/ProgramCard'
 import TestimonialCard from '../components/TestimonialCard'
-import { programs } from '../data/programs'
+import { programsAPI } from '../services/api'
 import { testimonials } from '../data/testimonials'
 
 export default function Home() {
-  const featuredPrograms = programs.slice(0, 4)
+  const [featuredPrograms, setFeaturedPrograms] = useState([])
+
+  useEffect(() => {
+    fetchPrograms()
+  }, [])
+
+  const fetchPrograms = async () => {
+    try {
+      const data = await programsAPI.getAll()
+      setFeaturedPrograms(data.slice(0, 4))
+    } catch (error) {
+      console.error('Error fetching programs:', error)
+    }
+  }
 
   return (
     <div className="pt-16">
@@ -191,7 +205,7 @@ export default function Home() {
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {featuredPrograms.map((program) => (
-              <ProgramCard key={program.id} program={program} />
+              <ProgramCard key={program._id} program={program} />
             ))}
           </div>
         </div>

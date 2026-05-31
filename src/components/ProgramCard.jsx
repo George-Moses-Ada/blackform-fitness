@@ -11,7 +11,7 @@ export default function ProgramCard({ program }) {
         />
         <div className="absolute top-3 left-3">
           <span className="px-3 py-1 bg-black/80 backdrop-blur-sm text-white text-xs font-medium rounded-full">
-            {program.goal}
+            {program.category}
           </span>
         </div>
       </div>
@@ -22,10 +22,10 @@ export default function ProgramCard({ program }) {
           <span>•</span>
           <span>{program.duration}</span>
           <span>•</span>
-          <span>{program.workouts} workouts</span>
+          <span>{program.weeks} weeks</span>
         </div>
         <Link
-          to={`/programs/${program.id}`}
+          to={`/programs/${program._id}`}
           className="block w-full py-3 text-center text-sm font-medium text-black bg-white rounded-full hover:bg-gray-200 transition-colors"
         >
           View Program
